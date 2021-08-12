@@ -7,20 +7,30 @@ class Block{
 		this.timestamp = timestamp;
 		this.data = data;
 		this.previousHash = previousHash;
-		this.hash = '';
+		this.hash = this.calculateHash();
+		this.nonce = 0;
 	}
 
 
 	calculateHash(){
-		return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+		return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)+this.nonce).toString();
 
 
+	}
+	mineBlock(difficulty){
+		while(this.hash.substring(0,difficulty) !== Array(difficulty+1).join("0")){
+			this.nonce++;
+			this.hash = this.calculateHash();
+		}
+
+		console.log(this.hash);
 	}
 }
 
 class Blockchain{
 	constructor(){
 		this.chain =[this.creatGenesisBlock()];
+		this.difficulty = 2;
 	}
 
 	creatGenesisBlock(){
@@ -32,7 +42,7 @@ class Blockchain{
 
 	addBlock(newBlock){
 		newBlock.previousHash = this.getLatestBlock().hash;
-		newBlock.hash = newBlock.calculateHash();
+		newBlock.mineBlock(this.difficulty);
 		this.chain.push(newBlock);
 	}
 
@@ -54,15 +64,11 @@ class Blockchain{
 	}
 }
 
-let potatCoin = new Blockchain();
-potatCoin.addBlock(new Block(1,"09/11/2021",{amount:4}));
-potatCoin.addBlock(new Block(1,"09/11/2021",{amount:16}));
+let testCoin = new Blockchain();
 
-console.log('Is Blockchain valid?' + ' '+potatCoin.isChainValid());
+console.log('Mining block 1...')
+testCoin.addBlock(new Block(1,"09/11/2021",{amount:4}));
 
-potatCoin.chain[1].data = {amount: 100};
+console.log('Mining block 2...')
+testCoin.addBlock(new Block(1,"09/11/2021",{amount:16}));
 
-
-console.log('Is Blockchain valid?' + ' '+potatCoin.isChainValid());
-
-//console.log(JSON.stringify(potatCoin,null,4));
