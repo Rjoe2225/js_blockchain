@@ -35,10 +35,34 @@ class Blockchain{
 		newBlock.hash = newBlock.calculateHash();
 		this.chain.push(newBlock);
 	}
+
+	isChainValid(){
+		for(let i = 1; i<this.chain.length; i++){
+			const currentBlock = this.chain[i];
+			const previousBlock = this.chain[i-1];
+
+			if(currentBlock.hash !== currentBlock.calculateHash()){
+				return false;
+			}
+
+			if(currentBlock.previousHash !== previousBlock.hash){
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
 
 let potatCoin = new Blockchain();
 potatCoin.addBlock(new Block(1,"09/11/2021",{amount:4}));
 potatCoin.addBlock(new Block(1,"09/11/2021",{amount:16}));
 
-console.log(JSON.stringify(potatCoin,null,4));
+console.log('Is Blockchain valid?' + ' '+potatCoin.isChainValid());
+
+potatCoin.chain[1].data = {amount: 100};
+
+
+console.log('Is Blockchain valid?' + ' '+potatCoin.isChainValid());
+
+//console.log(JSON.stringify(potatCoin,null,4));
