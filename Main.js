@@ -9,25 +9,22 @@ class Block{
 		this.previousHash = previousHash;
 		this.hash = this.calculateHash();
 		this.nonce = 0;
-		this.hash = '';
-		this.nonce =0;
 	}
 
 
 	calculateHash(){
 		return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)+this.nonce).toString();
 
-		
-	}
 
+	}
 	mineBlock(difficulty){
-		while(this.hash.substring(0,difficulty)!== Array(difficulty + 1).join("0")){
+		while(this.hash.substring(0,difficulty) !== Array(difficulty+1).join("0")){
 			this.nonce++;
-			this.hash=this.calculateHash;
+			this.hash = this.calculateHash();
 		}
-		console.log("Block mined: "+this.hash);
-	}
 
+		console.log(this.hash);
+	}
 }
 
 class Blockchain{
@@ -69,25 +66,8 @@ class Blockchain{
 
 let testCoin = new Blockchain();
 
-
-//console.log("Mining block 1...")
-
-//testCoin.addBlock(new Block(1,"09/11/2021",{amount:4}));
-
-//console.log("Mining block 2...")
-
-//testCoin.addBlock(new Block(1,"09/11/2021",{amount:16}));
-
-//console.log('Is the Blockchain valid?' + ' '+potatCoin.isChainValid());
-
-//testCoin.chain[1].data = {amount: 100};
-
 console.log('Mining block 1...')
 testCoin.addBlock(new Block(1,"09/11/2021",{amount:4}));
 
 console.log('Mining block 2...')
 testCoin.addBlock(new Block(1,"09/11/2021",{amount:16}));
-
-//console.log('Is the Blockchain valid?' + ' '+testCoin.isChainValid());
-
-console.log(JSON.stringify(testCoin,null,4));
